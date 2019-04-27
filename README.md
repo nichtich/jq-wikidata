@@ -22,6 +22,7 @@ especially for large numbers of entities.  Please also consider using a dedicate
   * [Simplify aliases](#simplify-aliases)
   * [Simmplify sitelinks ](#simplify-sitelinks)
   * [Remove metadata](#remove-metadata)
+  * [Simplify claims](#simplify-claims)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -125,6 +126,13 @@ remove_metadata
 Removes entity fields `modified`, `lastrevid`, `pageid`, `ns`, and `title`. See
 [`del`](https://stedolan.github.io/jq/manual/#del(path_expression)) to remove
 selected fields.
+
+## Simplify claims
+
+~~~jq
+.claims|simplify_claims                 # default
+.claims|simplify_claims(remove_hashes)  # specific filters
+~~~
 
 ## Contributing
 

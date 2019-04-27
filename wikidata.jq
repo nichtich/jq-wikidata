@@ -26,14 +26,24 @@ def simplify_aliases:
   with_entries(.value |= map(.value))
 ;
 
-def simplify_claims:
-  . # TODO
-;
-
 def simplify_sitelinks:
   with_entries(.value |= .title)
 ;
 
 def remove_metadata:
   del(.modified,.lastrevid,.pageid,.ns,.title)
+;
+
+def simplify_claims(f):
+  with_entries(.value |= map( del(.type,.id) | f ))
+;
+
+def simplify_claims:
+  simplify_claims(.)
+;
+
+def remove_hashes:
+  del(.mainsnak.hash, .references[]?.hash)
+  # TODO: remove hashes from references's snak
+  # TODO: remove hashes from qualifiers
 ;
