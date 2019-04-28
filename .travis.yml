@@ -1,4 +1,5 @@
 language: bash
 dist: xenial    # use Ubuntu 16.04 base image, including jq 1.5
 
+before_script: jq -L. -n '"wikidata"|modulemeta'
 script: ./tests/run.sh
