@@ -4,6 +4,11 @@ DIR=$(dirname "${BASH_SOURCE[0]}")
 LIB=$DIR/..
 FAIL=0
 
+
+function jsonstream() {
+    jq -cr 'tostream|" ."+(.[0]|map(tostring)|join("."))+"="+(.[1]|tojson)' "$@"
+}
+
 testcase() {
     NAME="$1"
     IN="$DIR"/$NAME.in.json
@@ -17,7 +22,7 @@ testcase() {
     else
       echo -e "\e[31m✘ $NAME\e[0m"
       let FAIL++
-      diff -U0 -d <(jq -S -L"$LIB" -f "$JQ" "$IN") <(jq -S . "$OUT") \
+      diff -U0 -d <(jq -S -L"$LIB" -f "$JQ" "$IN" | jsonstream) <(jsonstream "$OUT") \
         | grep -e '^[+-] ' | sed 's/^/  /'
     fi
 }
