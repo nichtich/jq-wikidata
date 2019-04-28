@@ -19,12 +19,14 @@ especially for large numbers of entities.  Please also consider using a dedicate
   * [Per-item access](#per-item-access)
   * [Reduce entity data](#reduce-entity-data)
 * [API](#api)
+  * [Remove metadata](#remove-metadata)
   * [Simplify labels](#simplify-labels)
   * [Simplify descriptions](#simplify-descriptions)
   * [Simplify aliases](#simplify-aliases)
   * [Simplify sitelinks ](#simplify-sitelinks)
-  * [Remove metadata](#remove-metadata)
   * [Simplify claims](#simplify-claims)
+  * [Simplify lexeme](#simplify-lexeme)
+  * [Simplify forms](#simplify-forms)
   * [Stream an array of entities](#stream-an-array-of-entities)
 * [Contributing](#contributing)
 * [License](#license)
@@ -104,6 +106,16 @@ jq 'include "wikidata"; remove_metadata' entities.ndjson
 
 ## API
 
+### Remove metadata
+
+~~~jq
+remove_metadata
+~~~
+
+Removes entity fields `modified`, `lastrevid`, `pageid`, `ns`, and `title`. See
+[`del`](https://stedolan.github.io/jq/manual/#del(path_expression)) to remove
+selected fields.
+
 ### Simplify labels
 
 ~~~jq
@@ -128,21 +140,39 @@ jq 'include "wikidata"; remove_metadata' entities.ndjson
 .sitelinks|simplify_sitelinks
 ~~~
 
-### Remove metadata
+### Simplify lexeme
 
-~~~jq
-remove_metadata
+Simplifies lemmas, forms, and senses of a lexeme entity.
+
+~~~.jq
+simplify_lexeme
 ~~~
 
-Removes entity fields `modified`, `lastrevid`, `pageid`, `ns`, and `title`. See
-[`del`](https://stedolan.github.io/jq/manual/#del(path_expression)) to remove
-selected fields.
+### Simplify forms
+
+~~~.jq
+.forms|simplify_forms
+~~~
+
+### Simplify senses
+
+~~~.jq
+.senses|simplify_senses
+~~~
 
 ## Simplify claims
 
 ~~~jq
 .claims|simplify_claims                 # default
 .claims|simplify_claims(remove_hashes)  # specific filters
+~~~
+
+### Simplify forms
+
+Only lexemes have forms.
+
+~~~
+.forms|simplify_forms
 ~~~
 
 ### Stream an array of entities

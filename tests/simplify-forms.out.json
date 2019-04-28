@@ -1,0 +1,67 @@
+[
+  {
+    "id": "L3006-F1",
+    "representations": {
+      "en": "go"
+    },
+    "grammaticalFeatures": [
+      "Q3910936"
+    ]
+  },
+  {
+    "id": "L3006-F2",
+    "representations": {
+      "en": "goes"
+    },
+    "grammaticalFeatures": [
+      "Q3910936",
+      "Q51929447"
+    ]
+  },
+  {
+    "id": "L3006-F3",
+    "representations": {
+      "en": "went"
+    },
+    "grammaticalFeatures": [
+      "Q1392475"
+    ],
+    "claims": {
+      "P5191": [
+        {
+          "mainsnak": {
+            "snaktype": "value",
+            "property": "P5191",
+            "datavalue": {
+              "value": {
+                "entity-type": "lexeme",
+                "numeric-id": 8464,
+                "id": "L8464"
+              },
+              "type": "wikibase-entityid"
+            }
+          },
+          "rank": "normal"
+        }
+      ]
+    }
+  },
+  {
+    "id": "L3006-F4",
+    "representations": {
+      "en": "gone"
+    },
+    "grammaticalFeatures": [
+      "Q1230649"
+    ]
+  },
+  {
+    "id": "L3006-F5",
+    "representations": {
+      "en": "going"
+    },
+    "grammaticalFeatures": [
+      "Q10345583"
+    ]
+  }
+]

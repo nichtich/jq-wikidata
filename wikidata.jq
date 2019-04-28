@@ -39,11 +39,20 @@ def remove_metadata:
 ;
 
 def simplify_claims(f):
+  # always removes .type ("statement") and .id
   with_entries(.value |= map( del(.type,.id) | f ))
 ;
 
 def simplify_claims:
   simplify_claims(.)
+;
+
+def simplify_entity_claims:
+  if (.claims|length>0) then
+    .claims |= simplify_claims
+  else
+    del(.claims)
+  end 
 ;
 
 def simplify_snak:
@@ -69,3 +78,26 @@ def remove_hashes:
     .
   end
 ;
+
+# Lexemes
+
+def simplify_forms:
+  map(
+    .representations |= with_entries(.value |= .value)
+    | simplify_entity_claims
+  )
+;
+
+def simplify_senses:
+  map(
+    .glosses |= with_entries(.value |= .value)
+    | simplify_entity_claims
+  )
+;
+
+def simplify_lexeme:
+  .lemmas |= with_entries(.value |= .value) |
+  .forms  |= simplify_forms |
+  .senses |= simplify_senses
+;
+
