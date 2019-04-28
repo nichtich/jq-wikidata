@@ -14,6 +14,10 @@ def ndjson:
   fromstream(1|truncate_stream(inputs))
 ;
 
+def entity_data_url:
+  "https://www.wikidata.org/wiki/Special:EntityData/" + . + ".json"
+;
+
 def simplify_labels:
   with_entries(.value |= .value)
 ;

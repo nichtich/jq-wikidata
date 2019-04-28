@@ -16,6 +16,7 @@ especially for large numbers of entities.  Please also consider using a dedicate
 * [Install](#install)
 * [Usage](#usage)
   * [Process JSON dumps](#process-json-dumps)
+  * [Per-item access](#per-item-access)
   * [Reduce entity data](#reduce-entity-data)
 * [API](#api)
   * [Simplify labels](#simplify-labels)
@@ -66,6 +67,23 @@ With a fast and stable internet connection it's possible to process the dump on-
 ~~~sh
 curl -s https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.bz2 \
   | bzcat | jq -nc --stream 'import "wikidata"; ndjson' | jq .id
+~~~
+
+### Per-item access
+
+JSON data for single entities can be ontained via the
+[Entity Data URL](https://www.wikidata.org/wiki/Special:EntityData). Examples:
+
+* <https://www.wikidata.org/wiki/Special:EntityData/Q42.json>
+* <https://www.wikidata.org/wiki/Special:EntityData/L3006.json>
+* <https://www.wikidata.org/wiki/Special:EntityData/L3006-F1.json>
+
+The module function `entity_data_url` creates these URLs from Wikidata
+itentifier strings. The resulting data is wrapped in JSON object; unwrap with
+`.entities|.[]`:
+
+~~~bash
+curl $(echo Q42 | jq -rR 'include "wikidata"; entity_data_url') | jq '.entities|.[]'
 ~~~
 
 ### Reduce entity data
