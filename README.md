@@ -18,13 +18,13 @@ especially for large numbers of entities.  Please also consider using a dedicate
   * [Process JSON dumps](#process-json-dumps)
   * [Reduce entity data](#reduce-entity-data)
 * [API](#api)
-  * [Stream an array of entities](#stream-an-array-of-entities)
   * [Simplify labels](#simplify-labels)
   * [Simplify descriptions](#simplify-descriptions)
   * [Simplify aliases](#simplify-aliases)
-  * [Simmplify sitelinks ](#simplify-sitelinks)
+  * [Simplify sitelinks ](#simplify-sitelinks)
   * [Remove metadata](#remove-metadata)
   * [Simplify claims](#simplify-claims)
+  * [Stream an array of entities](#stream-an-array-of-entities)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -86,15 +86,6 @@ jq 'include "wikidata"; remove_metadata' entities.ndjson
 
 ## API
 
-### Stream an array of entities
-
-Module function `ndjson` can be used to process a stream with an array of
-entities into a list of entities:
-
-~~~sh
-bzcat latest-all.json.bz2 | jq -n --stream 'import "wikidata"; ndjson'
-~~~
-
 ### Simplify labels
 
 ~~~jq
@@ -113,7 +104,7 @@ bzcat latest-all.json.bz2 | jq -n --stream 'import "wikidata"; ndjson'
 .aliases|simplify_aliases
 ~~~
 
-### Simmplify sitelinks 
+### Simplify sitelinks
 
 ~~~jq
 .sitelinks|simplify_sitelinks
@@ -134,6 +125,15 @@ selected fields.
 ~~~jq
 .claims|simplify_claims                 # default
 .claims|simplify_claims(remove_hashes)  # specific filters
+~~~
+
+### Stream an array of entities
+
+Module function `ndjson` can be used to process a stream with an array of
+entities into a list of entities:
+
+~~~sh
+bzcat latest-all.json.bz2 | jq -n --stream 'import "wikidata"; ndjson'
 ~~~
 
 ## Contributing
