@@ -42,8 +42,26 @@ def simplify_claims:
   simplify_claims(.)
 ;
 
+def simplify_snak:
+  del(.hash,.property)
+;
+
+def simplify_snaks:
+  with_entries(.value |= map(simplify_snak))
+;
+
+def simplify_references:
+  del(.hash) | .snaks |= simplify_snaks
+;
+
 def remove_hashes:
-  del(.mainsnak.hash, .references[]?.hash)
-  # TODO: remove hashes from references's snak
-  # TODO: remove hashes from qualifiers
+  .mainsnak  |= simplify_snak
+  |
+  .references[]? |= simplify_references
+  |
+  if has("qualifiers") then
+    .qualifiers |= simplify_snaks
+  else
+    .
+  end
 ;

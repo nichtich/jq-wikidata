@@ -1,0 +1,4 @@
+language: bash
+dist: xenial    # use Ubuntu 16.04 base image, including jq 1.5
+
+script: ./tests/run.sh

@@ -1,5 +1,7 @@
 # jq-wikidata
 
+[![Build Status](https://travis-ci.org/nichtich/jq-wikidata.svg?branch=master)](https://travis-ci.org/nichtich/jq-wikidata)
+
 > jq module to process Wikidata JSON format
 
 This git repository contains a module for the [jq data transformation language](https://stedolan.github.io/jq/) to process entity data from [Wikidata](https://www.wikidata.org) or other [Wikibase](http://wikiba.se/) instances serialized in its JSON format.
