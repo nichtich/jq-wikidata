@@ -18,27 +18,29 @@ def entity_data_url:
   "https://www.wikidata.org/wiki/Special:EntityData/" + . + ".json"
 ;
 
-def simplify_labels:
+
+# labels, descriptions, aliases, sitelinks
+
+def reduceLabels:
   with_entries(.value |= .value)
 ;
 
-def simplify_descriptions:
+def reduceDescriptions:
   with_entries(.value |= .value)
 ;
 
-def simplify_aliases:
+def reduceAliases:
   with_entries(.value |= map(.value))
 ;
 
-def simplify_sitelinks:
+def reduceSitelinks:
   with_entries(.value |= .title)
 ;
 
-def remove_info:
-  del(.pageid,.ns,.title,.lastrevid,.modified)
-;
 
-def simplify_value:
+# ...
+
+def reduceValue:
   if .datavalue.type == "wikibase-entityid" then
     .datavalue.value.id
   else
@@ -49,50 +51,50 @@ def simplify_value:
 def reduce_snak(base):
   base as $base |
   if $base.snaktype == "value" then
-      .value = ( $base | simplify_value ) 
+      .value = ( $base | reduceValue ) 
     | .type = $base.datavalue.type
   else
     .type = $base.snaktype  # somevalue or novalue
   end
 ;
 
-def simplify_snak:
+def reduceSnak:
     del(.hash,.property)
   | reduce_snak(.) | del(.datavalue, .snaktype, .datatype)
 ;
 
-def simplify_snaks:
-  with_entries(.value |= map(simplify_snak))
+def reduceSnaks:
+  with_entries(.value |= map(reduceSnak))
 ;
 
-def simplify_references:
-  del(.hash) | .snaks |= simplify_snaks
+def reduceReferences:
+  del(.hash) | .snaks |= reduceSnaks
 ;
 
-def simplify_claim:
+def reduceClaim:
     del(.type)  # is always "statement"
   | del(.id)
   | reduce_snak(.mainsnak) | del(.mainsnak)
-  | .references[]? |= simplify_references
+  | .references[]? |= reduceReferences
   |
   if has("qualifiers") then
-    .qualifiers |= simplify_snaks
+    .qualifiers |= reduceSnaks
   else
     .
   end
 ;
 
-def simplify_claims(f):
-  with_entries(.value |= map(simplify_claim | f ))
+def reduceClaims(f):
+  with_entries(.value |= map(reduceClaim | f ))
 ;
 
-def simplify_claims:
-  simplify_claims(.)
+def reduceClaims:
+  reduceClaims(.)
 ;
 
-def simplify_entity_claims:
+def reduceEntity_claims:
   if (.claims|length>0) then
-    .claims |= simplify_claims
+    .claims |= reduceClaims
   else
     del(.claims)
   end 
@@ -100,37 +102,45 @@ def simplify_entity_claims:
 
 # Items and properties
 
-def simplify_property:
-  .labels |= simplify_labels |
-  .descriptions |= simplify_descriptions |
-  .aliases |= simplify_aliases |
-  simplify_entity_claims
+def reduceProperty:
+  .labels |= reduceLabels |
+  .descriptions |= reduceDescriptions |
+  .aliases |= reduceAliases |
+  reduceEntity_claims
 ;
 
-def simplify_item:
-  simplify_property |
-  .sitelinks |= simplify_sitelinks 
+def reduceItem:
+  reduceProperty |
+  .sitelinks |= reduceSitelinks 
 ;
 
 # Lexemes
 
-def simplify_forms:
+def reduceForms:
   map(
     .representations |= with_entries(.value |= .value)
-    | simplify_entity_claims
+    | reduceEntity_claims
   )
 ;
 
-def simplify_senses:
+def reduceSenses:
   map(
     .glosses |= with_entries(.value |= .value)
-    | simplify_entity_claims
+    | reduceEntity_claims
   )
 ;
 
-def simplify_lexeme:
-  simplify_entity_claims |
+def reduceLexeme:
+  reduceEntity_claims |
   .lemmas |= with_entries(.value |= .value) |
-  .forms  |= simplify_forms |
-  .senses |= simplify_senses
+  .forms  |= reduceForms |
+  .senses |= reduceSenses
 ;
+
+
+#  Additional information fields
+
+def reduceInfo:
+  del(.pageid,.ns,.title,.lastrevid,.modified)
+;
+

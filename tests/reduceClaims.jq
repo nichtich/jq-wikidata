@@ -1,0 +1,1 @@
+include "wikidata"; .claims|reduceClaims

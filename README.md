@@ -21,16 +21,16 @@ especially for large numbers of entities.  Please also consider using a dedicate
   * [Per-item access](#per-item-access)
   * [Reduce entity data](#reduce-entity-data)
 * [API](#api)
-  * [Simplify item](#simplify-item)
-  * [Simplify property](#simplify-property)
-  * [Simplify labels](#simplify-labels)
-  * [Simplify descriptions](#simplify-descriptions)
-  * [Simplify aliases](#simplify-aliases)
-  * [Simplify sitelinks ](#simplify-sitelinks)
-  * [Simplify claims](#simplify-claims)
-  * [Simplify lexeme](#simplify-lexeme)
-  * [Simplify forms](#simplify-forms)
-  * [Remove additional info](#remove-info)
+  * [Reduce item](#reduce-item)
+  * [Reduce property](#reduce-property)
+  * [Reduce labels](#reduce-labels)
+  * [Reduce descriptions](#reduce-descriptions)
+  * [Reduce aliases](#reduce-aliases)
+  * [Reduce sitelinks ](#reduce-sitelinks)
+  * [Reduce claims](#reduce-claims)
+  * [Reduce lexeme](#reduce-lexeme)
+  * [Reduce forms](#reduce-forms)
+  * [Reduce info](#reduce-info)
   * [Stream an array of entities](#stream-an-array-of-entities)
 * [Contributing](#contributing)
 * [License](#license)
@@ -51,7 +51,7 @@ mkdir -p ~/.jq && git clone https://github.com/nichtich/jq-wikidata.git ~/.jq/wi
 The shortest method to use functions of this jq module is to directly `include` the module.
 
 ~~~sh
-jq -c 'include "wikidata"; .labels|simplify_labels' entities.ndjson
+jq -c 'include "wikidata"; .labels|reduceLabels' entities.ndjson
 ~~~
 
 More complex scripts should better be put into a `.jq` file:
@@ -59,7 +59,7 @@ More complex scripts should better be put into a `.jq` file:
 ~~~jq
 include "wikidata";
 
-.labels|simplify_labels
+.labels|reduceLabels
 ~~~
 
 ### Process JSON dumps
@@ -114,95 +114,95 @@ Select some fields:
 jq '{id,labels}' entities.ndjson
 ~~~
 
-Remove [additional fields](#remove-info):
+Remove [additional fields](#reduce-info):
 
 ~~~jq
-jq 'include "wikidata"; remove_info' entities.ndjson
+jq 'include "wikidata"; reduceInfo' entities.ndjson
 ~~~
 
 ## API
 
-### Simplify item
+### Reduce item
 
 Simplifies labels, descriptions, aliases, claims, and sitelinks of an item.
 
 ~~~.jq
-simplify_item
+reduceItem
 ~~~
 
-### Simplify property
+### Reduce property
 
 Simplifies labels, descriptions, aliases, and claims of a property.
 
 ~~~.jq
-simplify_property
+reduceProperty
 ~~~
 
-### Simplify labels
+### Reduce labels
 
 ~~~jq
-.labels|simplify_labels
+.labels|reduceLabels
 ~~~
 
-### Simplify descriptions
+### Reduce descriptions
 
 ~~~jq
-.descriptions|simplify_descriptions
+.descriptions|reduceDescriptions
 ~~~
 
-### Simplify aliases
+### Reduce aliases
 
 ~~~jq
-.aliases|simplify_aliases
+.aliases|reduceAliases
 ~~~
 
-### Simplify sitelinks
+### Reduce sitelinks
 
 ~~~jq
-.sitelinks|simplify_sitelinks
+.sitelinks|reduceSitelinks
 ~~~
 
-### Simplify lexeme
+### Reduce lexeme
 
 Simplifies lemmas, forms, and senses of a lexeme entity.
 
 ~~~.jq
-simplify_lexeme
+reduceLexeme
 ~~~
 
-### Simplify forms
+### Reduce forms
 
 ~~~.jq
-.forms|simplify_forms
+.forms|reduceForms
 ~~~
 
-### Simplify senses
+### Reduce senses
 
 ~~~.jq
-.senses|simplify_senses
+.senses|reduceSenses
 ~~~
 
-## Simplify claims
+## Reduce claims
 
 Removes unnecessary fields `.id`, `.hash`, `.type`, `.property` and simplifies
 values.
 
 ~~~jq
-.claims|simplify_claims
+.claims|reduceClaims
 ~~~
 
-### Simplify forms
+### Reduce forms
 
 Only lexemes have forms.
 
 ~~~
-.forms|simplify_forms
+.forms|reduceForms
 ~~~
 
-### Remove additional info
+### Reduce info
 
 ~~~jq
-remove_info
+reduceInfo
 ~~~
 
 Removes additional information fields `pageid`, `ns`, `title`, `lastrevid`, and `modified`.

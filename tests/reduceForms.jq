@@ -1,0 +1,1 @@
+include "wikidata"; .forms|reduceForms
