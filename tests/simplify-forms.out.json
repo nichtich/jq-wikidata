@@ -29,18 +29,8 @@
     "claims": {
       "P5191": [
         {
-          "mainsnak": {
-            "snaktype": "value",
-            "property": "P5191",
-            "datavalue": {
-              "value": {
-                "entity-type": "lexeme",
-                "numeric-id": 8464,
-                "id": "L8464"
-              },
-              "type": "wikibase-entityid"
-            }
-          },
+          "value": "L8464",
+          "type": "wikibase-entityid",
           "rank": "normal"
         }
       ]

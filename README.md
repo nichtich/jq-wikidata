@@ -9,7 +9,9 @@ This git repository contains a module for the [jq data transformation language](
 Several methods exist [to get entity data from Wikidata](https://www.wikidata.org/wiki/Wikidata:Data_access).
 This module is designed to process entities [in their JSON serialization](https://www.mediawiki.org/wiki/Wikibase/DataModel/JSON)
 especially for large numbers of entities.  Please also consider using a dedicated client such as
-[wikidata-cli](https://www.npmjs.com/package/wikidata-cli) instead.
+[wikidata-cli] instead.
+
+[wikidata-cli]: https://www.npmjs.com/package/wikidata-cli
 
 ## Table of Contents
 
@@ -19,7 +21,6 @@ especially for large numbers of entities.  Please also consider using a dedicate
   * [Per-item access](#per-item-access)
   * [Reduce entity data](#reduce-entity-data)
 * [API](#api)
-  * [Remove metadata](#remove-metadata)
   * [Simplify labels](#simplify-labels)
   * [Simplify descriptions](#simplify-descriptions)
   * [Simplify aliases](#simplify-aliases)
@@ -27,6 +28,7 @@ especially for large numbers of entities.  Please also consider using a dedicate
   * [Simplify claims](#simplify-claims)
   * [Simplify lexeme](#simplify-lexeme)
   * [Simplify forms](#simplify-forms)
+  * [Remove additional info](#remove-info)
   * [Stream an array of entities](#stream-an-array-of-entities)
 * [Contributing](#contributing)
 * [License](#license)
@@ -88,6 +90,18 @@ itentifier strings. The resulting data is wrapped in JSON object; unwrap with
 curl $(echo Q42 | jq -rR 'include "wikidata"; entity_data_url') | jq '.entities|.[]'
 ~~~
 
+As mentioned above you better use [wikidata-cli] for accessing small sets of items:
+
+~~~bash
+wd d Q42
+~~~
+
+To get sets of items that match a given criteria either use SPARL or MediaWiki API module
+[wbsearchentities] and/or MediaWiki API module [wbgetentities].
+
+[wbsearchentities]: https://www.wikidata.org/w/api.php?action=help&modules=wbsearchentities
+[wbgetentities]: https://www.wikidata.org/w/api.php?action=help&modules=wbgetentities
+
 ### Reduce entity data
 
 Many use cases only require a limite subset of entity data.
@@ -98,23 +112,13 @@ Select some fields:
 jq '{id,labels}' entities.ndjson
 ~~~
 
-Remove [most unused fields](#remove-metadata):
+Remove [additional fields](#remove-info):
 
 ~~~jq
-jq 'include "wikidata"; remove_metadata' entities.ndjson
+jq 'include "wikidata"; remove_info' entities.ndjson
 ~~~
 
 ## API
-
-### Remove metadata
-
-~~~jq
-remove_metadata
-~~~
-
-Removes entity fields `modified`, `lastrevid`, `pageid`, `ns`, and `title`. See
-[`del`](https://stedolan.github.io/jq/manual/#del(path_expression)) to remove
-selected fields.
 
 ### Simplify labels
 
@@ -162,9 +166,11 @@ simplify_lexeme
 
 ## Simplify claims
 
+Removes unnecessary fields `.id`, `.hash`, `.type`, `.property` and simplifies
+values.
+
 ~~~jq
-.claims|simplify_claims                 # default
-.claims|simplify_claims(remove_hashes)  # specific filters
+.claims|simplify_claims
 ~~~
 
 ### Simplify forms
@@ -174,6 +180,17 @@ Only lexemes have forms.
 ~~~
 .forms|simplify_forms
 ~~~
+
+### Remove additional info
+
+~~~jq
+remove_info
+~~~
+
+Removes additional information fields `pageid`, `ns`, `title`, `lastrevid`, and `modified`.
+
+To remove selected field see jq function [`del`](https://stedolan.github.io/jq/manual/#del(path_expression)).
+
 
 ### Stream an array of entities
 

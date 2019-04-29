@@ -14,17 +14,8 @@
   "claims": {
     "P5275": [
       {
-        "mainsnak": {
-          "snaktype": "value",
-          "property": "P5275",
-          "datavalue": {
-            "value": "79544",
-            "type": "string"
-          },
-          "datatype": "external-id"
-        },
-        "type": "statement",
-        "id": "L3006$eefef652-4df8-9796-4b35-fabc6fd894a0",
+        "value": "79544",
+        "type": "string",
         "rank": "normal"
       }
     ]
@@ -60,18 +51,8 @@
       "claims": {
         "P5191": [
           {
-            "mainsnak": {
-              "snaktype": "value",
-              "property": "P5191",
-              "datavalue": {
-                "value": {
-                  "entity-type": "lexeme",
-                  "numeric-id": 8464,
-                  "id": "L8464"
-                },
-                "type": "wikibase-entityid"
-              }
-            },
+            "value": "L8464",
+            "type": "wikibase-entityid",
             "rank": "normal"
           }
         ]
@@ -106,17 +87,8 @@
       "claims": {
         "P5972": [
           {
-            "mainsnak": {
-              "snaktype": "value",
-              "property": "P5972",
-              "datavalue": {
-                "value": {
-                  "entity-type": "sense",
-                  "id": "L4744-S1"
-                },
-                "type": "wikibase-entityid"
-              }
-            },
+            "value": "L4744-S1",
+            "type": "wikibase-entityid",
             "rank": "normal"
           }
         ]
@@ -130,17 +102,8 @@
       "claims": {
         "P5974": [
           {
-            "mainsnak": {
-              "snaktype": "value",
-              "property": "P5974",
-              "datavalue": {
-                "value": {
-                  "entity-type": "sense",
-                  "id": "L3210-S1"
-                },
-                "type": "wikibase-entityid"
-              }
-            },
+            "value": "L3210-S1",
+            "type": "wikibase-entityid",
             "rank": "normal"
           }
         ]

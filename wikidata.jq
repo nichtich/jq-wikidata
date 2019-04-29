@@ -34,13 +34,56 @@ def simplify_sitelinks:
   with_entries(.value |= .title)
 ;
 
-def remove_metadata:
-  del(.modified,.lastrevid,.pageid,.ns,.title)
+def remove_info:
+  del(.pageid,.ns,.title,.lastrevid,.modified)
+;
+
+def simplify_value:
+  if .datavalue.type == "wikibase-entityid" then
+    .datavalue.value.id
+  else
+    .datavalue.value
+  end
+;
+
+def reduce_snak(base):
+  base as $base |
+  if $base.snaktype == "value" then
+      .value = ( $base | simplify_value ) 
+    | .type = $base.datavalue.type
+  else
+    .type = $base.snaktype  # somevalue or novalue
+  end
+;
+
+def simplify_snak:
+    del(.hash,.property)
+  | reduce_snak(.) | del(.datavalue, .snaktype, .datatype)
+;
+
+def simplify_snaks:
+  with_entries(.value |= map(simplify_snak))
+;
+
+def simplify_references:
+  del(.hash) | .snaks |= simplify_snaks
+;
+
+def simplify_claim:
+    del(.type)  # is always "statement"
+  | del(.id)
+  | reduce_snak(.mainsnak) | del(.mainsnak)
+  | .references[]? |= simplify_references
+  |
+  if has("qualifiers") then
+    .qualifiers |= simplify_snaks
+  else
+    .
+  end
 ;
 
 def simplify_claims(f):
-  # always removes .type ("statement") and .id
-  with_entries(.value |= map( del(.type,.id) | f ))
+  with_entries(.value |= map(simplify_claim | f ))
 ;
 
 def simplify_claims:
@@ -55,29 +98,6 @@ def simplify_entity_claims:
   end 
 ;
 
-def simplify_snak:
-  del(.hash,.property)
-;
-
-def simplify_snaks:
-  with_entries(.value |= map(simplify_snak))
-;
-
-def simplify_references:
-  del(.hash) | .snaks |= simplify_snaks
-;
-
-def remove_hashes:
-  .mainsnak  |= simplify_snak
-  |
-  .references[]? |= simplify_references
-  |
-  if has("qualifiers") then
-    .qualifiers |= simplify_snaks
-  else
-    .
-  end
-;
 
 # Lexemes
 
@@ -96,8 +116,8 @@ def simplify_senses:
 ;
 
 def simplify_lexeme:
+  simplify_entity_claims |
   .lemmas |= with_entries(.value |= .value) |
   .forms  |= simplify_forms |
   .senses |= simplify_senses
 ;
-

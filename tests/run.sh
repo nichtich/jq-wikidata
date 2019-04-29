@@ -22,7 +22,7 @@ testcase() {
     else
       echo -e "\e[31m✘ $NAME\e[0m"
       let FAIL++
-      diff -U0 -d <(jq -S -L"$LIB" -f "$JQ" "$IN" | jsonstream) <(jsonstream "$OUT") \
+      diff -U0 -d <(jsonstream "$OUT") <(jq -S -L"$LIB" -f "$JQ" "$IN" | jsonstream) \
         | grep -e '^[+-] ' | sed 's/^/  /'
     fi
 }
