@@ -98,6 +98,19 @@ def simplify_entity_claims:
   end 
 ;
 
+# Items and properties
+
+def simplify_property:
+  .labels |= simplify_labels |
+  .descriptions |= simplify_descriptions |
+  .aliases |= simplify_aliases |
+  simplify_entity_claims
+;
+
+def simplify_item:
+  simplify_property |
+  .sitelinks |= simplify_sitelinks 
+;
 
 # Lexemes
 

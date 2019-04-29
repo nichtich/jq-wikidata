@@ -21,6 +21,8 @@ especially for large numbers of entities.  Please also consider using a dedicate
   * [Per-item access](#per-item-access)
   * [Reduce entity data](#reduce-entity-data)
 * [API](#api)
+  * [Simplify item](#simplify-item)
+  * [Simplify property](#simplify-property)
   * [Simplify labels](#simplify-labels)
   * [Simplify descriptions](#simplify-descriptions)
   * [Simplify aliases](#simplify-aliases)
@@ -119,6 +121,22 @@ jq 'include "wikidata"; remove_info' entities.ndjson
 ~~~
 
 ## API
+
+### Simplify item
+
+Simplifies labels, descriptions, aliases, claims, and sitelinks of an item.
+
+~~~.jq
+simplify_item
+~~~
+
+### Simplify property
+
+Simplifies labels, descriptions, aliases, and claims of a property.
+
+~~~.jq
+simplify_property
+~~~
 
 ### Simplify labels
 
