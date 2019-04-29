@@ -106,27 +106,33 @@ To get sets of items that match a given criteria either use SPARL or MediaWiki A
 
 ### Reduce entity data
 
-Many use cases only require a limite subset of entity data.
+Use function [reduceEntity](#reduce-entity) or more specific functions
+([reduceInfo](#reduce-info), [reduceItem](#reduce-item),
+[reduceProperty](#reduceProperty), [reduceLexeme](#reduceLexeme)) to
+reduce the JSON data structure without loss of essential information.
 
-Select some fields:
+Furher select only some specific fields if needed:
 
 ~~~jq
 jq '{id,labels}' entities.ndjson
 ~~~
 
-Remove [additional fields](#reduce-info):
+## API
+
+### Reduce Entity
+
+Applies [reduceInfo](#reduce-info) and one of [reduceItem](#reduce-item),
+[reduceProperty](#reduce-property), [reduceLexeme](#reduce-lexeme).
 
 ~~~jq
-jq 'include "wikidata"; reduceInfo' entities.ndjson
+reduceEntity
 ~~~
-
-## API
 
 ### Reduce item
 
 Simplifies labels, descriptions, aliases, claims, and sitelinks of an item.
 
-~~~.jq
+~~~jq
 reduceItem
 ~~~
 
@@ -134,7 +140,7 @@ reduceItem
 
 Simplifies labels, descriptions, aliases, and claims of a property.
 
-~~~.jq
+~~~jq
 reduceProperty
 ~~~
 
@@ -166,19 +172,19 @@ reduceProperty
 
 Simplifies lemmas, forms, and senses of a lexeme entity.
 
-~~~.jq
+~~jq
 reduceLexeme
 ~~~
 
 ### Reduce forms
 
-~~~.jq
+~~jq
 .forms|reduceForms
 ~~~
 
 ### Reduce senses
 
-~~~.jq
+~~jq
 .senses|reduceSenses
 ~~~
 

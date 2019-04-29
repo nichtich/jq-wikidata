@@ -137,10 +137,23 @@ def reduceLexeme:
   .senses |= reduceSenses
 ;
 
-
-#  Additional information fields
+# Additional information fields
 
 def reduceInfo:
   del(.pageid,.ns,.title,.lastrevid,.modified)
 ;
 
+# Full entity
+
+def reduceEntity:
+  reduceInfo |
+  if .type == "item" then
+    reduceItem
+  elif .type == "lexeme" then
+    reduceLexeme
+  elif .type == "property" then
+    reduceProperty
+  else
+    .
+  end
+;
