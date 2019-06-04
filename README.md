@@ -48,9 +48,17 @@ mkdir -p ~/.jq && git clone https://github.com/nichtich/jq-wikidata.git ~/.jq/wi
 
 ## Usage
 
-The shortest method to use functions of this jq module is to directly `include` the module.
+The shortest method to use functions of this jq module is to directly `include` the module. Try to process a single Wikidata entity:
 
 ~~~sh
+wget http://www.wikidata.org/wiki/Special:EntityData/Q42.json
+jq 'include "wikidata"; .entities[].labels|reduceLabels' Q42.json
+~~~
+
+It is recommended to put Wikidata entities in a newline delimited JSON file:
+
+~~~sh
+jq -c .entities[] Q42.json > entities.ndjson
 jq -c 'include "wikidata"; .labels|reduceLabels' entities.ndjson
 ~~~
 
@@ -60,6 +68,12 @@ More complex scripts should better be put into a `.jq` file:
 include "wikidata";
 
 .labels|reduceLabels
+~~~
+
+The file can then be processed this way:
+
+~~~sh
+jq -f script.jq entities.ndjson
 ~~~
 
 ### Process JSON dumps
