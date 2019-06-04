@@ -86,7 +86,7 @@ With a fast and stable internet connection it's possible to process the dump on-
 
 ~~~sh
 curl -s https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.bz2 \
-  | bzcat | jq -nc --stream 'import "wikidata"; ndjson' | jq .id
+  | bzcat | jq -nc --stream 'include "wikidata"; ndjson' | jq .id
 ~~~
 
 ### Per-item access
