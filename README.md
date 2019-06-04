@@ -28,6 +28,8 @@ especially for large numbers of entities.  Please also consider using a dedicate
   * [Reduce aliases](#reduce-aliases)
   * [Reduce sitelinks ](#reduce-sitelinks)
   * [Reduce claims](#reduce-claims)
+  * [Reduce claim](#reduce-claim)
+  * [Reduce references](#reduce-references)
   * [Reduce lexeme](#reduce-lexeme)
   * [Reduce forms](#reduce-forms)
   * [Reduce info](#reduce-info)
@@ -48,7 +50,7 @@ mkdir -p ~/.jq && git clone https://github.com/nichtich/jq-wikidata.git ~/.jq/wi
 
 ## Usage
 
-The shortest method to use functions of this jq module is to directly `include` the module. Try to process a single Wikidata entity:
+The shortest method to use functions of this jq module is to directly `include` the module. Try to process a single Wikidata entity (see below for details about [per-item acces](#per-item-access)):
 
 ~~~sh
 wget http://www.wikidata.org/wiki/Special:EntityData/Q42.json
@@ -186,30 +188,42 @@ reduceProperty
 
 Simplifies lemmas, forms, and senses of a lexeme entity.
 
-~~jq
+~~~jq
 reduceLexeme
 ~~~
 
 ### Reduce forms
 
-~~jq
+~~~jq
 .forms|reduceForms
 ~~~
 
 ### Reduce senses
 
-~~jq
+~~~jq
 .senses|reduceSenses
 ~~~
 
-## Reduce claims
+### Reduce claims
 
 Removes unnecessary fields `.id`, `.hash`, `.type`, `.property` and simplifies
-values.
+values for each claim.
 
 ~~~jq
 .claims|reduceClaims
 ~~~
+
+### Reduce claim
+
+Reduces a single claim value.
+
+~~~jq
+.claims.P26[]|reduceClaim
+~~~
+
+### Reduce references
+
+...
 
 ### Reduce forms
 
@@ -229,7 +243,6 @@ Removes additional information fields `pageid`, `ns`, `title`, `lastrevid`, and 
 
 To remove selected field see jq function [`del`](https://stedolan.github.io/jq/manual/#del(path_expression)).
 
-
 ### Stream an array of entities
 
 Module function `ndjson` can be used to process a stream with an array of
@@ -237,6 +250,12 @@ entities into a list of entities:
 
 ~~~sh
 bzcat latest-all.json.bz2 | jq -n --stream 'import "wikidata"; ndjson'
+~~~
+
+Alternative, possibly more performant methods to process array of entities [are described here](https://lucaswerkmeister.de/posts/2017/09/03/wikidata+dgsh/):
+
+~~~sh
+bzcat latest-all.json.bz2 | head -n-1 | tail -n+2 | sed 's/,$//'
 ~~~
 
 ## Contributing
