@@ -1,34 +1,49 @@
 #!/bin/bash
+# jq test runner
 
 DIR=$(dirname "${BASH_SOURCE[0]}")
-LIB=$DIR/..
+LIBS=(-L../ -L\~/.jq -L\$ORIGIN/../lib/jq -L\$ORIGIN/../lib)
 FAIL=0
 
-
 function jsonstream() {
-    jq -cr 'tostream|" ."+(.[0]|map(tostring)|join("."))+"="+(.[1]|tojson)' "$@"
+  jq -cr 'tostream|" ."+(.[0]|map(tostring)|join("."))+"="+(.[1]|tojson)' "$@"
+}
+
+function runtest() {
+  NAME="$1"
+  IN="$DIR"/$NAME.in.json
+  JQ="$DIR"/$NAME.jq
+
+  if [ -e "$IN" ]; then
+    jq ${LIBS[*]} -f "$JQ" "$IN"
+  else
+    jq ${LIBS[*]} -f "$JQ" -n
+  fi
 }
 
 testcase() {
-    NAME="$1"
-    IN="$DIR"/$NAME.in.json
-    OUT="$DIR"/$NAME.out.json
-    JQ="$DIR"/$NAME.jq
+  NAME="$1"
+  OUT="$DIR"/$NAME.out.json
 
-    jq -e -n '[inputs]|.[0]==.[1]' <(jq -L"$LIB" -f "$JQ" "$IN") "$OUT" >/dev/null
+  if [ -e "$OUT" ]; then
+    jq -e -n '[inputs]|.[0]==.[1]' <(runtest "$NAME") "$OUT" >/dev/null
+  else
+    runtest "$NAME" 
+  fi
 
-    if [ $? -eq 0 ]; then
-      echo -e "\e[32m✔ $NAME\e[0m"
-    else
-      echo -e "\e[31m✘ $NAME\e[0m"
-      let FAIL++
-      diff -U0 -d <(jsonstream "$OUT") <(jq -S -L"$LIB" -f "$JQ" "$IN" | jsonstream) \
-        | grep -e '^[+-] ' | sed 's/^/  /'
-    fi
+  if [ $? -eq 0 ]; then
+    echo -e "\e[32m✔ $NAME\e[0m"
+  else
+    echo -e "\e[31m✘ $NAME\e[0m"
+    let FAIL++
+    diff -U0 -d <(jsonstream "$OUT") <(runtest "$NAME" | jsonstream) \
+    | grep -e '^[+-] ' | sed 's/^/  /'
+  fi
 }
 
+shopt -s nullglob
 for JQ in "$DIR"/*.jq; do
-    testcase $(basename "$JQ" .jq)
+  testcase $(basename "$JQ" .jq)
 done
 
 if [ $FAIL -ne 0 ]; then
